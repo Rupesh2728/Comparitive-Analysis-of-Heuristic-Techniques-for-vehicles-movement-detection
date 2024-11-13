@@ -3,6 +3,11 @@
 <h3 align="center">The goal of this project is to develop and compare algorithms which detect the boundaries of the region of vehicles movement in different directions </h3>
 <h4 align="center">Dataset available at <a href="https://drive.google.com/drive/folders/1bIZRoKkS__D0MvD7Ns8Yih2byix4RnoB?usp=sharing" target="blank">https://drive.google.com/drive/folders/1bIZRoKkS__D0MvD7Ns8Yih2byix4RnoB?usp=sharing</a> </h3>
 
+<h2 align="left">Motivation :</h2>
+
+While existing research predominantly relies on deep learning for motion boundary detection, these approaches often entail extensive training on large datasets, leading to high computational costs and increased complexity. To mitigate these challenges, this paper proposes three alternative algorithms that leverage existing methods, avoiding the need for intensive training phases while maintaining robust performance in real-world traffic scenarios.
+
+
 <h2 align="left">Tech Stack and Tools :</h2>
 <p>
 <a href="https://www.python.org/" target="_blank" rel="noreferrer"> <img src="https://thevolteragroup.com/wp-content/uploads/2024/09/Python-Symbol.png" alt="Python" width="180" height="100"/> </a>
@@ -12,49 +17,168 @@
 <a href="https://code.visualstudio.com/download" target="_blank" rel="noreferrer"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnoirCtiJhhN8Tvo0FJRRd4CInsOXkRX9EbA&s" alt="VSCode Editor" width="80" height="80"/> </a>
 <a href="https://www.canva.com/en_in/" target="_blank" rel="noreferrer"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcIHgIQZVkU3KQEreTEqQXO9iG2Boyc3n-2A&s" alt="Canva" width="100" height="100"/> </a>
 
-<h2 align="left">Features</h2>
+<h2 align="left">Overall Workflow</h2>
+<img src="./Source_Code/Overall Workflow.png" alt="Workflow"/> 
 
-- MetaMask Integration  
+<h2 align="left">Data Pre-processing</h2>
+<h3 align="center">Road Surface segmentation</h3>
+<img src="./Source_Code/Road Surface Segmentation.png" alt="Workflow"/> 
 
-- Platform Fee 
+<h2 align="left">Adaptive Algorithms</h2>
+
+
+<h3 align="center">Adaptive Optical Flow</h3>
+
+- Lucas- Kanade Optical flow is Useful for tracking objects in video footage
+
+- Estimate the locations of keypoints in the current frame using previous frame
+
+- The algorithm checks the consistency of these estimates and only the points with consistent estimates are added into trajectory
+
+- The points which are at a consistent distance from previous feature point in the trajectory are only considered
+
+- Direction vectors of vehicles are estimated using last 2 points of trajectories
+
+- Based on direction vectors, the direction of vehicle and the boundaries in that specific direction are decided
+
+<img src="./Source_Code/Optical Flow/Opticalflow_Workflow.png" alt="Workflow"/> 
+
+
+<h3 align="center">Adaptive Blob Tracking</h3>
+
+- Using Blob tracking we can detect and track the vehicle (Blobs)
+
+- By Using the SORT Algorithm we can find the multiple objects in a video sequence
+
+- Based on the current position and previous position of the blob, it decides the direction of the vehicle 
+
+- Assigning different colors to vehicles in each direction
+
+- From vehicle tracker , by using co-ordinates of every vehicles the left and right trajectorys of the vehicle can be drawn
+
+- Based on the Above, boundaries in that specific direction are determined.
+
+<img src="./Source_Code/Blob tracking/Blob Tracking Workflow.png" alt="Workflow"/> 
+
+
+
+<h3 align="center">Adaptive YOLO and SORT</h3>
+
+- Using YOLO to get the detections of vehicles moving
+
+- Using the detections to track the vehicles using SORT Algorithm
+
+- Considering the current position and previous position of each vehicle, to decide the direction of the vehicle
+
+- Finding the tracking ID of the vehicles which represent the boundary in that direction
+
+- Considering the trajectory of that vehicle, gives the boundary in that direction
+
+- Two cases, to confirm the vehicle is moving in that direction using x, y coordinates
+
+- Vice-versa, used to detect boundary of that direction
   
-- Player Fee 
+<img src="./Source_Code/YOLO_SORT/YOLO_SORT Workflow.png" alt="Workflow"/> 
 
-- Bonus 
 
-- Separate Dashboards for Players and Owners 
+
+<h2 align="left">Comparitve Analysis</h2>
+
+- Approaches implemented are prediction tasks
+
+- Considering Standard metrics for evaluating the performance, Mean Square Error(MSE), Root Mean Square Error(RMSE) are taken
+
+ <img src="./Results/Results_Table.png" alt="Results"/> 
+
+<p align="center">
+<img src="./Results/mse.jpg" alt="Results" /> 
+<img src="./Results/Avg_MSE.png" alt="Results" /> 
+</p>
+
+<p align="center">
+ <img src="./Results/rmse.jpg" alt="Results" /> 
+<img src="./Results/Avg_RMSE.png" alt="Results" /> 
+</p>
+
+<h3 align="center">Analysis of Results</h3>
+
+- **Adaptive Blob Tracking :** Bounding boxes adjust as the vehicle moves away, closely matching the predicted and actual boundaries, minimizing error
+  
+- **Adaptive Optical Flow :** Boundary detection relies on feature points. As the vehicle recedes, fewer features are detected, decreasing boundary accuracy and increasing error
+  
+- **Adaptive YOLO and SORT :** The bounding box size remains nearly constant, occasionally exceeding the vehicle’s size as it moves, which raises error in boundary detection
+
+<img src="./Results/Space.png" alt="Results"/> 
+
+<img src="./Results/Time.png" alt="Results"/> 
+
+<h2 align="left">Conclusion</h2>
+
+- This research presents a novel framework to assess the effectiveness of Multi-layer Contiguous Virtual Layer (MCVL) in vehicle detection
+
+- It compares three heuristic methods—based on optical flow, blob tracking, and YOLO sort algorithms—for detecting vehicle movement in traffic videos
+
+- Unlike existing research that relies heavily on deep learning, which has notable drawbacks, this study proposes adaptive approaches as alternatives and evaluates them using metrics like Mean Square Error (MSE) and Root Mean Square Error (RMSE)
+
+- Each approach is explained with visual interpretations of the results to aid understanding.
+
 
 <h2 align="left">Uniqueness</h2>
 
-- The winning algorithm is quite simple and different from existing ones.
+- The adaptive algorithms are innovative and diverge from traditional deep learning-based solutions.
 
-- Separate dashboards are created for both players and owners.
+- Each algorithm has unique strengths and limitations, adapting differently across various types of videos.
 
-- A bonus is awarded to players for every 5 games played, enhancing the gaming experience.
+- Comparative analysis equips users to choose the optimal algorithm based on specific scenarios.
 
-- Each round accommodates 4 players, ensuring smooth gameplay without interruptions from others not engaged in the game.
+- The interface is designed to be visually appealing, adding to the project’s usability.
 
-- The current setup may not be highly scalable, but improvements can be made by adjusting the smart contract.
-
-- The user interface is aesthetically pleasing, enhancing the overall gaming experience.
+- This blend of functionality and aesthetics provides users with an enriched experience.
 
 
-<h2 align="left">Installation</h2>
-To get started with this project, clone the repository and install the necessary libraries in your system
+<h2 align="left">User Interface</h2>
+
+- It offers different options, such as choosing algorithms and entering the number of frames.  
+
+- This makes it useful for both automatic and custom tasks
+
+- Users can quickly choose and run algorithms without needing to change any code, which makes the process faster and easier
+
+- You can access the codefiles which are present in the **UI** folder inside the **Source_Code** folder
+
+<img src="./UI/WorkFlow.png" alt="Workflow"/> 
+<img src="./UI/UI_1.jpg" alt="UI"/> 
+<img src="./UI/UI_2.jpg" alt="UI"/>
+<img src="./UI/UI_1.jpg" alt="UI"/>
+
+
+<h2 align="left">Setup and Installation</h2>
+
+- To get started with this project, Place the test videos from the dataset link in the videos folder
+
+- Next, clone the repository and install the necessary libraries in your system
 
 ```bash
 # Clone the repository
-git clone https://github.com/Rupesh2728/Three-Card-Poker.git
+git clone https://github.com/Rupesh2728/Comparitive-Analysis-of-Heuristic-Techniques-for-vehicles-movement-detection.git
 
 # Navigate to the project directory
-cd Three-Card-Poker-main
+cd Comparitive-Analysis-of-Heuristic-Techniques-for-vehicles-movement-detection-main
 
-# Install all the Hardhat related packages
-npm install
+# Source-Code
+# For the purpose of Logic, Navigate to Source_Code directory
+cd Source-Code
 
-# Install all the Client related packages
-cd client
-npm install
+# You find the files of all the three algorithms
+# Install necessary python dependencies and run the required files
+
+
+# GUI
+# For the purpose of UI, Navigate to UI directory
+cd UI
+
+# To run the GUI, run "gui.py" with necessary dependencies installed
+python gui.py
 ```
 - Project is ready for execution !!!
   
