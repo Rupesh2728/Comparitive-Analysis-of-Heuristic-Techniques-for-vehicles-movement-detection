@@ -112,6 +112,96 @@ While existing research predominantly relies on deep learning for motion boundar
 
 <img src="./Results/Time.png" alt="Results"/> 
 
+
+<h2 align="left">Dynamic Thresholding (Utilized in Road Surface Segmentation Process) </h2>
+
+- Manualthresholding uses a fixed threshold for all pixels in the image.
+
+- Hence, it cannot deal with images containing, for example, a strong illumination gradient or weak-illumination gradient.
+
+- Adaptive or Dynamic thresholding changes the threshold dynamically over the image.
+
+- This more sophisticated version of thresholding can accommodate changing lighting conditions in the image.
+
+
+<h3 align="center">Chow and Kaneko Dynamic Thresholding :</h3>
+
+- Chow and Kaneko divide an image into an array of overlapping subimages and then find the optimum threshold for each subimage by investigating its histogram
+
+- The image is divided into small overlapping windows of size window_size × window_size. Each window represents a localregion around a pixel.
+
+- The threshold for each single pixel is found by interpolating the results of the subimages.
+
+- The threshold T(i,j) for each pixel (i,j) is calculated using the Chow and Kaneko formula:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/66f27aa7-b9c9-44e5-8f79-390ea8f855d9" alt="Chow and kaneko formula" width="250" height="100" /> 
+</p>
+
+- If I(i,j)>T(i,j)the pixel is setto 255 (white, foreground).
+
+- Otherwise, itis setto 0 (black, background).
+
+
+
+
+<h3 align="center">Local Adaptive Thresholding :</h3>
+
+- This method statistically examines the intensity values of the local neighborhood of each pixel.
+
+- The size ofthe neighborhood has to be large enough to cover sufficientforeground and background pixels, otherwise a poor threshold is chosen. (Window size: k x k)
+
+- Within the localregion, a Gaussian kernel is applied. A Gaussian kernel assigns more weightto pixels closerto the center of the region and less weightto pixels farther away.
+
+  <p align="center">
+    <img src="https://github.com/user-attachments/assets/bffffe9b-612d-4201-a1c1-2d954f3f3c50" alt="Kernel formula" width="500" height="80" /> 
+  </p>
+
+- The weighted sum of pixel intensities within the localregion is computed using the Gaussian weights. This gives the localthreshold (T) for the pixel.
+
+- If I(i,j)>T the pixel is setto 255 (white, foreground).
+
+- Otherwise, itis setto 0 (black, background)
+
+
+<h3 align="center">Otsu’s Thresholding  :</h3>
+
+- Compute the histogram of the grayscale image and the histogram represents the frequency of each intensity value (0–255 for 8-bitimages).
+
+- Normalize the histogram to calculate probabilities P(i) of each intensity i.
+
+- For each threshold t, Divide the histogram into two classes : 1.) Class 1(Background): Intensities [0,t] 2.) Class 2 (Foreground): Intensities [t+1,255]
+
+- Compute the probabilities of each class :
+  
+ <p align="center">
+ <img src="https://github.com/user-attachments/assets/253f2611-d751-4c64-8c53-8d37f5f859f2" alt=" formula" width="200" height="50" /> 
+ </p> 
+
+- Calculate the mean intensity of each class:
+
+ <p align="center">
+ <img src="https://github.com/user-attachments/assets/46f45297-bbf2-4eb6-8e97-cda18c257a32" alt="formula"  width="250" height="50" />
+ </p> 
+ 
+- Calculate the between-class variance :  
+
+ <p align="center">
+ <img src="https://github.com/user-attachments/assets/9fa5b410-5042-48f8-a90f-b7a90e6b60a2" alt="formula"  width="250" height="50" /> 
+ </p> 
+ 
+- Identify the threshold that maximizes the between-class variance:   
+ 
+ <p align="center">
+<img src="https://github.com/user-attachments/assets/5f670704-0d10-4502-808b-52a909f718ec" alt=" formula"  width="200" height="50" /> 
+ </p> 
+
+<h3 align="center">Dynamic Thresholding Example : (With Comparison with Manual Thresholding)</h3>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ed52e2f8-e517-47e6-a9ae-1a224215ba17"/> 
+</p>
+
 <h2 align="left">Conclusion</h2>
 
 - This research presents a novel framework to assess the effectiveness of Multi-layer Contiguous Virtual Layer (MCVL) in vehicle detection
